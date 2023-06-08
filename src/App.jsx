@@ -1,41 +1,49 @@
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
+// import Timer from "./components/timer/timer";
+import Round from "./components/round/round";
+import Number from "./components/number/number";
+import GptTimer from "./components/gpttimer/gptTimer";
 function App() {
-  const [round, SetRound] = useState(1);
-  const [min, setMin] = useState(0);
-  const [sec, setSec] = useState(3);
-
-  useEffect(() => {
-    // 설정된 시간 간격마다 setInterval 콜백이 실행된다.
-    const countdown = setInterval(() => {
-      if (parseInt(sec) > 0) {
-        setSec(parseInt(sec) - 1);
-      }
-      if (parseInt(sec) === 0) {
-        if (parseInt(min) === 0) {
-          SetRound(round + 1);
-          clearInterval(countdown);
-        } else {
-          setMin(parseInt(min) - 1);
-          setSec(59);
-        }
-      }
-    }, 1000);
-    return () => clearInterval(countdown);
-  }, [min, sec]);
-
-  let arr = [];
-  for (let i = 0; i <= 6; i++) {
-    const random = Math.floor(Math.random() * 46);
-    if (arr.indexOf(random) === -1) {
-      arr.push(random);
-    } else {
-      i--;
-    }
-    const lottoArr = arr.sort(function (a, b) {
-      return a - b;
-    });
-  }
+  // const [round, SetRound] = useState(1);
+  // const [num1, setNum1] = useState("");
+  // const [num2, setNum2] = useState("");
+  // const [num3, setNum3] = useState("");
+  // const [num4, setNum4] = useState("");
+  // const [num5, setNum5] = useState("");
+  // const [num6, setNum6] = useState("");
+  // const [num7, setNum7] = useState("");
+  // const onChangeNum1 = (e) => {
+  //   setNum1(e.target.value);
+  // };
+  // const onChangeNum2 = (e) => {
+  //   setNum2(e.target.value);
+  // };
+  // const onChangeNum3 = (e) => {
+  //   setNum3(e.target.value);
+  // };
+  // const onChangeNum4 = (e) => {
+  //   setNum4(e.target.value);
+  // };
+  // const onChangeNum5 = (e) => {
+  //   setNum5(e.target.value);
+  // };
+  // const onChangeNum6 = (e) => {
+  //   setNum6(e.target.value);
+  // };
+  // const onChangeNum7 = (e) => {
+  //   setNum7(e.target.value);
+  // };
+  // const onSave = () => {
+  //   setNum1(num1);
+  //   setNum1(num2);
+  //   setNum1(num3);
+  //   setNum1(num4);
+  //   setNum1(num5);
+  //   setNum1(num6);
+  //   setNum1(num7);
+  // };
+  // console.log(onSave);
 
   return (
     <ConDiv>
@@ -46,15 +54,23 @@ function App() {
           textAlign: "center",
         }}
       >
-        <div style={{ display: "flex" }}>
-          <NDiv>{round}회차</NDiv>
-          <TimeDiv>
-            남은 시간 {min}:{sec < 10 ? `0${sec}` : sec}
-          </TimeDiv>
-        </div>
-        <LoDiv>{arr[0]}</LoDiv>
+        <Round></Round>
+        <GptTimer></GptTimer>
+        <Number></Number>
       </div>
-      <ReDiv></ReDiv>
+      <ReDiv>
+        <div style={{ display: "flex", justifyContent: "space-around" }}>
+          {/* <input style={{ width: "10%" }} onChange={onChangeNum1} />
+          <input style={{ width: "10%" }} onChange={onChangeNum2} />
+          <input style={{ width: "10%" }} onChange={onChangeNum3} />
+          <input style={{ width: "10%" }} onChange={onChangeNum4} />
+          <input style={{ width: "10%" }} onChange={onChangeNum5} />
+          <input style={{ width: "10%" }} onChange={onChangeNum6} />
+          <input style={{ width: "10%" }} onChange={onChangeNum7} /> */}
+
+          {/* <button onClick={onSave}>저장</button> */}
+        </div>
+      </ReDiv>
     </ConDiv>
   );
 }
@@ -68,28 +84,6 @@ const ConDiv = styled.div`
   flex-direction: column;
 `;
 
-const NDiv = styled.div`
-  width: 6%;
-  font-size: 2rem;
-  background-color: lightgray;
-  margin: 1rem 0 1rem 0;
-  border-radius: 5px 0 0 5px;
-  border-right: 2px solid;
-`;
-
-const TimeDiv = styled.div`
-  width: 20%;
-  font-size: 2rem;
-  background-color: lightgray;
-  margin: 1rem 0 1rem 0;
-  border-radius: 0 5px 5px 0;
-`;
-const LoDiv = styled.div`
-  width: 40%;
-  height: 500px;
-  background-color: lightgray;
-  border-radius: 5px;
-`;
 const ReDiv = styled.div`
   width: 40%;
   height: 300px;
