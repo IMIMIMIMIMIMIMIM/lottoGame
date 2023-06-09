@@ -1,71 +1,126 @@
-import React, { useState, useEffect } from "react";
+// import React, { useState, useEffect } from "react";
+// import styled from "styled-components";
 
-const Timer = () => {
-  const [time, setTime] = useState(3); // 초기 타이머 시간 (3분)
-  const [lotteryNumbers, setLotteryNumbers] = useState([]);
+// const Timer = ({ round }) => {
+//   const [minutes, setMinutes] = useState(0);
+//   const [seconds, setSeconds] = useState(3);
+//   const [lottoNumbers, setLottoNumbers] = useState([]);
 
-  useEffect(() => {
-    let intervalId = null;
+//   useEffect(() => {
+//     const countdown = setInterval(() => {
+//       if (seconds > 0) {
+//         setSeconds(seconds - 1);
+//       } else {
+//         if (minutes === 0) {
+//           clearInterval(countdown);
+//           generateLottoNumbers();
+//         } else {
+//           setMinutes(minutes - 1);
+//           setSeconds(59);
+//         }
+//       }
+//     }, 1000);
 
-    const startTimer = () => {
-      intervalId = setInterval(() => {
-        setTime((prevTime) => prevTime - 1);
-      }, 1000);
-    };
+//     return () => clearInterval(countdown);
+//   }, [minutes, seconds]);
 
-    const resetTimer = () => {
-      clearInterval(intervalId);
-      setTime(3);
-    };
+//   const generateLottoNumbers = () => {
+//     const numbers = [];
+//     for (let i = 0; i < 7; i++) {
+//       const randomNumber = Math.floor(Math.random() * 45) + 1;
+//       if (!numbers.includes(randomNumber)) {
+//         numbers.push(randomNumber);
+//       }
+//     }
+//     setLottoNumbers((prevNumbers) => [...prevNumbers, numbers]);
+//   };
 
-    if (time === 0) {
-      // 타이머가 종료된 경우
-      clearInterval(intervalId);
+//   return (
+//     <TimerContainer>
+//       <RoundNumber>{round}회차</RoundNumber>
+//       <TimeRemaining>
+//         {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
+//       </TimeRemaining>
+//     </TimerContainer>
+//   );
+// };
 
-      // 로또 번호 뽑기
-      const newLotteryNumbers = generateLotteryNumbers();
-      setLotteryNumbers(newLotteryNumbers);
+// const TimerContainer = styled.div`
+//   display: flex;
+//   align-items: center;
+//   margin-bottom: 1rem;
+// `;
 
-      // 타이머 재시작
-      resetTimer();
-      startTimer();
-    } else if (intervalId === null) {
-      // 타이머가 시작되지 않은 경우
-      startTimer();
-    }
+// const RoundNumber = styled.div`
+//   width: 6%;
+//   font-size: 2rem;
+//   background-color: lightgray;
+//   margin-right: 1rem;
+//   border-radius: 5px;
+//   border-right: 2px solid;
+//   border-color: white;
+// `;
 
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [time]);
+// const TimeRemaining = styled.div`
+//   font-size: 2rem;
+//   background-color: lightgray;
+//   padding: 0.5rem;
+//   border-radius: 5px;
+// `;
 
-  const generateLotteryNumbers = () => {
-    const numbers = [];
-    while (numbers.length < 7) {
-      const newNumber = Math.floor(Math.random() * 45) + 1;
-      if (!numbers.includes(newNumber)) {
-        numbers.push(newNumber);
-      }
-    }
-    return numbers.sort((a, b) => a - b);
-  };
+// const App = () => {
+//   const [lottoNumbers, setLottoNumbers] = useState([]);
 
-  const formatTime = (seconds) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes.toString().padStart(2, "0")}:${remainingSeconds
-      .toString()
-      .padStart(2, "0")}`;
-  };
+//   const generateLottoNumbers = () => {
+//     const numbers = [];
+//     for (let i = 0; i < 7; i++) {
+//       const randomNumber = Math.floor(Math.random() * 45) + 1;
+//       if (!numbers.includes(randomNumber)) {
+//         numbers.push(randomNumber);
+//       }
+//     }
+//     setLottoNumbers((prevNumbers) => [...prevNumbers, numbers]);
+//   };
 
-  return (
-    <div>
-      <h1>Timer: {formatTime(time)}</h1>
-      {lotteryNumbers.length > 0 && (
-        <p>Lottery Numbers: {lotteryNumbers.join(", ")}</p>
-      )}
-    </div>
-  );
-};
+//   return (
+//     <AppContainer>
+//       <TimersContainer>
+//         {[1, 2, 3].map((round) => (
+//           <Timer
+//             key={round}
+//             round={round}
+//             generateLottoNumbers={generateLottoNumbers}
+//           />
+//         ))}
+//       </TimersContainer>
+//       <ResultContainer>
+//         {lottoNumbers.map((numbers, index) => (
+//           <LottoNumber key={index}>{numbers.join(", ")}</LottoNumber>
+//         ))}
+//       </ResultContainer>
+//     </AppContainer>
+//   );
+// };
 
-export default Timer;
+// const AppContainer = styled.div`
+//   display: flex;
+// `;
+
+// const TimersContainer = styled.div`
+//   width: 50%;
+//   margin-right: 1rem;
+// `;
+
+// const ResultContainer = styled.div`
+//   width: 50%;
+// `;
+
+// const LottoNumber = styled.div`
+//   font-size: 1.5rem;
+//   background-color: lightgray;
+//   padding: 0.5rem;
+//   border-radius: 5px;
+//   margin-bottom: 0.5rem;
+// `;
+
+// export default App;
