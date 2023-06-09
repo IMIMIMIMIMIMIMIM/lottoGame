@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Number from "../number/number";
+
 const Round = () => {
   const [round, setRound] = useState(1);
   const [min, setMin] = useState(0);
@@ -11,14 +12,12 @@ const Round = () => {
       if (parseInt(sec) > 0) {
         setSec(parseInt(sec) - 1);
       }
-      if (parseInt(sec) === 0) {
-        if (parseInt(min) === 0) {
-          clearInterval(countdown);
-          reLoad();
-        } else {
-          setMin(parseInt(min) - 1);
-          setSec(59);
-        }
+      if (parseInt(sec) === 0 && parseInt(min) === 0) {
+        clearInterval(countdown);
+        reLoad();
+      } else if (parseInt(sec) === 0) {
+        setMin(parseInt(min) - 1);
+        setSec(59);
       }
     }, 1000);
     return () => clearInterval(countdown);
@@ -28,9 +27,9 @@ const Round = () => {
     setTimeout(() => {
       setSec(3);
       setRound(round + 1);
-      Number();
     }, 2000);
   };
+
   return (
     <div style={{ display: "flex" }}>
       <NDiv>{round}회차</NDiv>
@@ -44,7 +43,7 @@ const Round = () => {
 export default Round;
 
 const NDiv = styled.div`
-  width: 6%;
+  /* width: 6%; */
   font-size: 2rem;
   background-color: lightgray;
   margin: 1rem 0 1rem 0;
@@ -54,7 +53,7 @@ const NDiv = styled.div`
 `;
 
 const TimeDiv = styled.div`
-  width: 20%;
+  /* width: 20%; */
   font-size: 2rem;
   background-color: lightgray;
   margin: 1rem 0 1rem 0;
