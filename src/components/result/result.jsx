@@ -1,12 +1,11 @@
 import styled from "styled-components";
 
-const Result = () => {
-  const result = () => {
-    // numbers();
-  };
+const Result = (props) => {
   return (
     <ReDiv>
-      <div>{result}</div>
+      <div>
+        {props.round}회차 로또 번호: {props.lottoNumbers}
+      </div>
     </ReDiv>
   );
 };

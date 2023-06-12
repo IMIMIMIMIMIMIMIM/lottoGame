@@ -18,7 +18,7 @@ function App() {
         >
           <Round></Round>
           {/* <GptTimer></GptTimer> */}
-          <Number></Number>
+          {/* <Number></Number> */}
         </div>
         <Input></Input>
       </ConDiv>
