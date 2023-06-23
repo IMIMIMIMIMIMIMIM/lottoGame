@@ -1,10 +1,30 @@
 import styled from "styled-components";
-import Round from "./components/round/round";
-import Number from "./components/number/number";
-import GptTimer from "./components/gpttimer/gptTimer";
-import Result from "./components/result/result";
-import Input from "./components/input/input";
-function App() {
+import React, { useState } from "react";
+import Round from "./components/round";
+import Number from "./components/number";
+import Input from "./components/input";
+import Result from "./components/result";
+
+const App = () => {
+  const [round, setRound] = useState([1]);
+  const [lottoNumbers, setLottoNumbers] = useState([]);
+  const [numbersList, setNumbersList] = useState([]);
+  const [timerFinished, setTimerFinished] = useState(false);
+
+  const handleRoundChange = (newRound) => {
+    setRound((prevRounds) => [newRound, ...prevRounds]);
+  };
+
+  const handleTimerFinish = () => {
+    setTimerFinished(true);
+  };
+
+  const handleNumbersChange = (numbers) => {
+    setLottoNumbers(numbers);
+    setNumbersList((prevList) => [numbers, ...prevList]);
+    setTimerFinished(false);
+  };
+
   return (
     <AppDiv>
       <ConDiv>
@@ -16,16 +36,21 @@ function App() {
             justifyContent: "space-between",
           }}
         >
-          <Round></Round>
-          {/* <GptTimer></GptTimer> */}
-          {/* <Number></Number> */}
+          <Round
+            onRoundChange={handleRoundChange}
+            onTimerFinish={handleTimerFinish}
+          />
+          <Number
+            timerFinished={timerFinished}
+            onNumbersChange={handleNumbersChange}
+          />
         </div>
         <Input></Input>
       </ConDiv>
-      <Result></Result>
+      <Result rounds={round} numbersList={numbersList} />
     </AppDiv>
   );
-}
+};
 
 export default App;
 
@@ -43,5 +68,3 @@ const ConDiv = styled.div`
   flex-direction: column;
   overflow: hidden;
 `;
-
-// box shadow = 0 1px 3px 0 rgba(136, 148, 158, 0.25), 0 0 2px 0 rgba(136, 148, 158, 0.3)

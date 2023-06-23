@@ -1,10 +1,16 @@
-import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import Result from "../result/result";
+import React, { useEffect, useState } from "react";
 
-const Number = ({ timerFinished }) => {
+const Number = ({ timerFinished, onNumbersChange }) => {
   const [lottoNumbers, setLottoNumbers] = useState([]);
+  const [numbersList, setNumbersList] = useState([]);
   const [currentNumber, setCurrentNumber] = useState(null);
+
+  useEffect(() => {
+    if (timerFinished) {
+      generateLottoNumbers();
+    }
+  }, [timerFinished]);
 
   useEffect(() => {
     if (lottoNumbers.length > 0) {
@@ -17,46 +23,52 @@ const Number = ({ timerFinished }) => {
         } else {
           setCurrentNumber((prevNumber) => prevNumber + 1);
         }
-      }, 1000);
+      }, 500);
 
       return () => clearInterval(interval);
     }
   }, [lottoNumbers, currentNumber]);
-  // 추첨 속도
-
-  useEffect(() => {
-    if (timerFinished) {
-      generateLottoNumbers();
-    }
-  }, [timerFinished]);
-  // 0이 되면 추첨 시작
 
   const generateLottoNumbers = () => {
-    let arr = [];
-    for (let i = 0; i < 7; i++) {
-      const random = Math.floor(Math.random() * 45 + 1);
-      arr.push(random);
+    let numberArr = [];
+    let bonusNumber = null;
+
+    while (numberArr.length < 6) {
+      const random = Math.floor(Math.random() * 45) + 1;
+      if (!numberArr.includes(random)) {
+        numberArr.push(random);
+      }
     }
-    const sortedArr = arr.slice(0, 6).sort((a, b) => a - b);
-    const additionalNumber = arr[6];
-    setLottoNumbers([...sortedArr, additionalNumber]);
+
+    numberArr.sort((a, b) => a - b);
+
+    while (true) {
+      const random = Math.floor(Math.random() * 45) + 1;
+      if (!numberArr.includes(random)) {
+        bonusNumber = random;
+        break;
+      }
+    }
+
+    const finalLottoNumbers = [...numberArr, bonusNumber];
+    setLottoNumbers(finalLottoNumbers);
+    setNumbersList((prevList) => [...prevList, finalLottoNumbers]);
     setCurrentNumber(0);
+    onNumbersChange(finalLottoNumbers);
   };
-  // 번호 추첨, 6개는 추첨후 정렬 한 개는 따로 뺌
 
   const getBackgroundColor = (number) => {
     if (number <= 10) {
-      return "yellow";
+      return "#fbc400";
     } else if (number <= 20) {
-      return "blue";
+      return "#69c8f2";
     } else if (number <= 30) {
-      return "red";
+      return "#ff7272";
     } else if (number <= 40) {
-      return "gray";
+      return "#aaa";
     } else {
-      return "green";
+      return "#b0d840";
     }
-    // 숫자 색
   };
 
   return (
@@ -81,39 +93,39 @@ const Number = ({ timerFinished }) => {
           </NumDiv>
         </>
       )}
-      <Result lottoNumbers={lottoNumbers} />
     </LoDiv>
   );
 };
 
+export default Number;
+
 const LoDiv = styled.div`
   display: flex;
+  width: 90%;
+  margin-left: 2rem;
   justify-content: space-around;
   align-items: center;
   height: 200px;
-  background-color: lightgray;
-  border-radius: 5px;
+  background-color: #dfdf9c;
+  border-radius: 15px;
+  box-shadow: 0px 0px 10px 1px;
 `;
 
 const NumDiv = styled.div`
   font-size: 1.5rem;
   background-color: ${(props) => props.bgColor};
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 60px;
+  height: 60px;
   display: flex;
   justify-content: center;
   align-items: center;
+  color: white;
   opacity: ${(props) => (props.show ? 1 : 0)};
   transition: opacity 0.5s;
+  text-shadow: 0px 0px 3px rgba(0, 49, 70, 0.8);
 `;
 
 const PlusDiv = styled.div`
   font-size: 1.5rem;
 `;
-
-// const Result = styled.div`
-//   display: none;
-// `;
-
-export default Number;
