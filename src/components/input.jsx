@@ -1,24 +1,35 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
-const Input = ({ className }) => {
+const Input = () => {
   const [numbers, setNumbers] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (e, index) => {
     const { value } = e.target;
     const updatedNumbers = [...numbers];
     updatedNumbers[index] = parseInt(value);
     setNumbers(updatedNumbers);
-  };
+  }; // 입력받은 숫자 배열에 담음.
 
   const handleSave = () => {
-    const choose = numbers.slice(0, 7);
-    console.log(choose); // choose 변수에 저장된 숫자 출력
+    const choose = numbers.slice(0, 6);
+    const uniqueNumbers = [...new Set(choose)]; // 중복 제거
+
+    if (uniqueNumbers.length !== choose.length) {
+      // 길이가 다르면, 6으로 해도 될듯
+      setErrorMessage("중복된 숫자를 뽑을수 없습니다.");
+    } else if (choose.some((number) => number > 45)) {
+      setErrorMessage("45보다 큰 숫자를 뽑을 수 없습니다.");
+    } else {
+      setErrorMessage("");
+      console.log(choose);
+    }
   };
 
   return (
-    <div className={className}>
-      {Array.from({ length: 7 }, (_, index) => (
+    <InDiv>
+      {Array.from({ length: 6 }, (_, index) => (
         <input
           key={index}
           type="number"
@@ -27,15 +38,20 @@ const Input = ({ className }) => {
         />
       ))}
       <button onClick={handleSave}>저장</button>
-    </div>
+      {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+    </InDiv>
   );
 };
 
-const StyledInput = styled(Input)`
+export default Input;
+
+const InDiv = styled.div`
   height: 300px;
   margin-top: 1rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
   background-color: gray;
-  border-radius: 5px;
+  border-radius: 10px;
 
   h2 {
     margin-bottom: 1rem;
@@ -65,4 +81,7 @@ const StyledInput = styled(Input)`
   }
 `;
 
-export default StyledInput;
+const ErrorMessage = styled.p`
+  color: red;
+  margin-top: 0.5rem;
+`;

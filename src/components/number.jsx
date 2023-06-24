@@ -1,5 +1,5 @@
-import styled from "styled-components";
 import React, { useEffect, useState } from "react";
+import styled from "styled-components";
 
 const Number = ({ timerFinished, onNumbersChange }) => {
   const [lottoNumbers, setLottoNumbers] = useState([]);
@@ -10,7 +10,7 @@ const Number = ({ timerFinished, onNumbersChange }) => {
     if (timerFinished) {
       generateLottoNumbers();
     }
-  }, [timerFinished]);
+  }, [timerFinished]); // 타이머 종료하면 추첨 함수 실행
 
   useEffect(() => {
     if (lottoNumbers.length > 0) {
@@ -27,7 +27,7 @@ const Number = ({ timerFinished, onNumbersChange }) => {
 
       return () => clearInterval(interval);
     }
-  }, [lottoNumbers, currentNumber]);
+  }, [lottoNumbers, currentNumber]); // 0.5초 마다 숫자 하나씩 출력
 
   const generateLottoNumbers = () => {
     let numberArr = [];
@@ -38,9 +38,9 @@ const Number = ({ timerFinished, onNumbersChange }) => {
       if (!numberArr.includes(random)) {
         numberArr.push(random);
       }
-    }
+    } // 로또 추첨 로직
 
-    numberArr.sort((a, b) => a - b);
+    numberArr.sort((a, b) => a - b); // 오름차순 정렬
 
     while (true) {
       const random = Math.floor(Math.random() * 45) + 1;
@@ -48,11 +48,11 @@ const Number = ({ timerFinished, onNumbersChange }) => {
         bonusNumber = random;
         break;
       }
-    }
+    } // 보너스 번호 추첨 로직
 
-    const finalLottoNumbers = [...numberArr, bonusNumber];
-    setLottoNumbers(finalLottoNumbers);
-    setNumbersList((prevList) => [...prevList, finalLottoNumbers]);
+    const finalLottoNumbers = [...numberArr, bonusNumber]; // 추첨한 로또 번호와 보너스 번호 합침
+    setLottoNumbers(finalLottoNumbers); // app으로 넘어갈 한 회차의 로또 번호
+    setNumbersList((prevList) => [...prevList, finalLottoNumbers]); // result로 넘어갈 전체 회차 목록
     setCurrentNumber(0);
     onNumbersChange(finalLottoNumbers);
   };
@@ -69,7 +69,7 @@ const Number = ({ timerFinished, onNumbersChange }) => {
     } else {
       return "#b0d840";
     }
-  };
+  }; // 로또 배경 색
 
   return (
     <LoDiv>
@@ -101,8 +101,8 @@ export default Number;
 
 const LoDiv = styled.div`
   display: flex;
-  width: 90%;
-  margin-left: 2rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
   justify-content: space-around;
   align-items: center;
   height: 200px;

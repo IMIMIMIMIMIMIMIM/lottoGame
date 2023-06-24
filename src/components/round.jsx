@@ -1,5 +1,5 @@
-import styled from "styled-components";
 import React, { useEffect, useState } from "react";
+import styled from "styled-components";
 
 const Round = ({ onRoundChange, onTimerFinish }) => {
   const [round, setRound] = useState(1);
@@ -13,10 +13,7 @@ const Round = ({ onRoundChange, onTimerFinish }) => {
         clearInterval(countdown);
         setRound((prevRound) => prevRound + 1);
         onRoundChange(round + 1);
-        setSec(5);
-        // setTimeout(() => {
-        // }, 3000);
-        console.log(round);
+        setSec(3);
       } else if (parseInt(sec) > 0) {
         setSec((prevSec) => prevSec - 1);
       } else if (parseInt(sec) === 0) {
@@ -25,7 +22,7 @@ const Round = ({ onRoundChange, onTimerFinish }) => {
       }
     }, 1000);
     return () => clearInterval(countdown);
-  }, [min, sec, onTimerFinish]);
+  }, [min, sec, onTimerFinish]); // 타이머 작동 로직
 
   return (
     <div>
@@ -45,7 +42,7 @@ const NDiv = styled.div`
   margin-left: 5%;
   font-size: 2rem;
   background-color: lightgray;
-  margin: 1rem 0 1rem 2rem;
+  margin: 1rem 0 1rem 1rem;
   border-radius: 5px 0 0 5px;
   color: white;
   background-color: #333333;

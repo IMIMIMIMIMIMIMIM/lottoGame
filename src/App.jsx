@@ -1,5 +1,5 @@
-import styled from "styled-components";
 import React, { useState } from "react";
+import styled from "styled-components";
 import Round from "./components/round";
 import Number from "./components/number";
 import Input from "./components/input";
