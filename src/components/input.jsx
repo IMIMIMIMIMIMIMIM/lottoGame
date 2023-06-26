@@ -1,51 +1,83 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
-const Input = () => {
+const Input = ({ lottoNumbers, onCountChange, timerFinished }) => {
   const [numbers, setNumbers] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
+  const [count, setCount] = useState(0);
+  const [clickSaved, setClickSaved] = useState(false);
 
   const handleChange = (e, index) => {
     const { value } = e.target;
     const updatedNumbers = [...numbers];
     updatedNumbers[index] = parseInt(value);
     setNumbers(updatedNumbers);
-  }; // 입력받은 숫자 배열에 담음.
+  };
 
   const handleSave = () => {
     const choose = numbers.slice(0, 6);
     const uniqueNumbers = [...new Set(choose)]; // 중복 제거
 
     if (uniqueNumbers.length !== choose.length) {
-      // 길이가 다르면, 6으로 해도 될듯
-      setErrorMessage("중복된 숫자를 뽑을수 없습니다.");
+      setErrorMessage("중복된 숫자를 뽑을 수 없습니다.");
     } else if (choose.some((number) => number > 45)) {
       setErrorMessage("45보다 큰 숫자를 뽑을 수 없습니다.");
     } else {
       setErrorMessage("");
       console.log(choose);
+      setClickSaved(true);
     }
   };
 
+  useEffect(() => {
+    let counting = 0;
+    if (clickSaved) {
+      for (let i = 0; i < numbers.length; i++) {
+        if (lottoNumbers.includes(numbers[i])) {
+          counting++;
+        }
+      }
+      setCount(counting);
+      setClickSaved(false);
+      onCountChange(counting);
+    } else if (!clickSaved && timerFinished) {
+      counting = -1;
+      setCount(counting);
+      setClickSaved(false);
+      onCountChange(counting);
+    }
+  }, [numbers, lottoNumbers, clickSaved, onCountChange, timerFinished]);
+
+  useEffect(() => {
+    setNumbers([]);
+    setErrorMessage("");
+    setCount(0);
+  }, [lottoNumbers]);
+
   return (
-    <InDiv>
-      {Array.from({ length: 6 }, (_, index) => (
-        <input
-          key={index}
-          type="number"
-          value={numbers[index] || ""}
-          onChange={(e) => handleChange(e, index)}
-        />
-      ))}
-      <button onClick={handleSave}>저장</button>
+    <ConDiv>
+      <InDiv>
+        {Array.from({ length: 6 }, (_, index) => (
+          <NumberInput
+            key={index}
+            type="number"
+            value={numbers[index] || ""}
+            onChange={(e) => handleChange(e, index)}
+          />
+        ))}
+        <SaveBtn disabled={clickSaved} onClick={handleSave}>
+          저장
+        </SaveBtn>
+      </InDiv>
       {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-    </InDiv>
+      <p>맞춘 개수: {count}</p>
+    </ConDiv>
   );
 };
 
 export default Input;
 
-const InDiv = styled.div`
+const ConDiv = styled.div`
   height: 300px;
   margin-top: 1rem;
   margin-left: 1rem;
@@ -84,4 +116,25 @@ const InDiv = styled.div`
 const ErrorMessage = styled.p`
   color: red;
   margin-top: 0.5rem;
+`;
+
+const InDiv = styled.div`
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: space-around;
+`;
+
+const NumberInput = styled.input`
+  width: 5rem !important;
+  margin: 0 !important;
+  padding: 0;
+  outline: none;
+  text-align: center;
+`;
+
+const SaveBtn = styled.button`
+  height: 1.5rem;
+  width: 5rem;
+  margin: 0 !important;
+  padding: 0 !important;
 `;

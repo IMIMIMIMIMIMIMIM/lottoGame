@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Round from "./components/round";
 import Number from "./components/number";
@@ -10,6 +10,8 @@ const App = () => {
   const [lottoNumbers, setLottoNumbers] = useState([]);
   const [numbersList, setNumbersList] = useState([]);
   const [timerFinished, setTimerFinished] = useState(false);
+  const [count, setCount] = useState(0);
+  const [countList, setCountList] = useState([]);
 
   const handleRoundChange = (newRound) => {
     setRound((prevRounds) => [newRound, ...prevRounds]);
@@ -23,7 +25,18 @@ const App = () => {
     setLottoNumbers(numbers);
     setNumbersList((prevList) => [numbers, ...prevList]);
     setTimerFinished(false);
+    if (timerFinished && numbers.length === 0) {
+      handleCountChange(-1);
+    }
   };
+
+  const handleCountChange = (newCount) => {
+    setCount(newCount);
+    setCountList((prevCountList) => [newCount, ...prevCountList]);
+  };
+  useEffect(() => {
+    console.log(countList);
+  }, [countList]);
 
   return (
     <AppDiv>
@@ -45,9 +58,18 @@ const App = () => {
             onNumbersChange={handleNumbersChange}
           />
         </div>
-        <Input></Input>
+        <Input
+          lottoNumbers={lottoNumbers}
+          onCountChange={handleCountChange}
+          timerFinished={timerFinished}
+        />
       </ConDiv>
-      <Result rounds={round} numbersList={numbersList} />
+      <Result
+        rounds={round}
+        numbersList={numbersList}
+        count={count}
+        countList={countList}
+      />
     </AppDiv>
   );
 };
