@@ -1,27 +1,27 @@
 import React from "react";
 import styled from "styled-components";
 
-const Result = ({ rounds, numbersList, count, countList }) => {
-  const getGrade = (count) => {
-    switch (count) {
-      case 6:
-        return "1등";
-      case 5:
-        return "2등";
-      case 4:
-        return "3등";
-      case 3:
-        return "4등";
-      case 2:
-        return "5등";
-      case 1:
-        return "6등";
-      case 0:
-        return "낙첨";
-      case -1:
-        return "-";
-    }
-  };
+const Result = ({ rounds, numbersList }) => {
+  // const getGrade = (count) => {
+  //   switch (count) {
+  //     case 6:
+  //       return "1등";
+  //     case 5:
+  //       return "2등";
+  //     case 4:
+  //       return "3등";
+  //     case 3:
+  //       return "4등";
+  //     case 2:
+  //       return "5등";
+  //     case 1:
+  //       return "6등";
+  //     case 0:
+  //       return "낙첨";
+  //     case -1:
+  //       return "-";
+  //   }
+  // };
 
   const getBackgroundColor = (number) => {
     if (number <= 10) {
@@ -38,7 +38,7 @@ const Result = ({ rounds, numbersList, count, countList }) => {
   };
   return (
     <ReDiv>
-      <ul style={{ listStyle: "none", lineHeight: "60px", padding: "0" }}>
+      {/* <ReUl style={{ listStyle: "none", lineHeight: "60px", padding: "0" }}>
         {numbersList.map((numbers, index) => (
           <li style={{ display: "flex" }} key={index}>
             <RoundDiv>{rounds[index] - 1}회차</RoundDiv>
@@ -50,10 +50,34 @@ const Result = ({ rounds, numbersList, count, countList }) => {
                 {number}
               </NumberDiv>
             ))}
-            <GradeDiv>{getGrade(countList[index])}</GradeDiv>
           </li>
         ))}
-      </ul>
+      </ReUl> */}
+      <Table>
+        <thead>
+          <tr>
+            <th>회차</th>
+            <th>번호</th>
+          </tr>
+        </thead>
+        <tbody>
+          {numbersList.map((numbers, index) => (
+            <tr key={index}>
+              <td>{rounds[index] - 1}회차</td>
+              <td>
+                {numbers.map((number, i) => (
+                  <NumberDiv
+                    key={i}
+                    style={{ backgroundColor: getBackgroundColor(number) }}
+                  >
+                    {number}
+                  </NumberDiv>
+                ))}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
     </ReDiv>
   );
 };
@@ -85,14 +109,22 @@ const ReDiv = styled.div`
     height: 0;
   }
 `;
-const RoundDiv = styled.div`
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-top: 1rem;
-  width: 15%;
-  text-align: center;
-  border-right: 2px solid white;
-  color: white;
+
+const Table = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+  }
+
+  th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+  }
 `;
 
 const NumberDiv = styled.div`
@@ -107,10 +139,45 @@ const NumberDiv = styled.div`
   text-shadow: 0px 0px 3px rgba(0, 49, 70, 0.8);
 `;
 
-const GradeDiv = styled.span`
-  width: 20%;
-  font-size: 1.5rem;
-  text-align: center;
-  margin-top: 1rem;
-  border-left: 2px solid white;
-`;
+// const ReUl = styled.ul`
+//   list-style: none;
+//   line-height: 60px;
+//   padding: 0;
+// `;
+
+// const RoundDiv = styled.div`
+//   font-size: 1.5rem;
+//   font-weight: bold;
+//   margin-top: 1rem;
+//   width: 15%;
+//   text-align: center;
+//   border-right: 2px solid white;
+//   color: white;
+// `;
+
+// const NonP = styled.p`
+//   width: 28.5rem;
+
+//   text-align: center;
+//   color: white;
+// `;
+
+// const NumberDiv = styled.div`
+//   display: inline-block;
+//   margin: 1rem 0.5rem 0 0.5rem;
+//   font-size: 1.5rem;
+//   border-radius: 50%;
+//   width: 60px;
+//   height: 60px;
+//   text-align: center;
+//   color: white;
+//   text-shadow: 0px 0px 3px rgba(0, 49, 70, 0.8);
+// `;
+
+// const GradeDiv = styled.span`
+//   width: 20%;
+//   font-size: 1.5rem;
+//   text-align: center;
+//   margin-top: 1rem;
+//   border-left: 2px solid white;
+// `;

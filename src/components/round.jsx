@@ -13,7 +13,7 @@ const Round = ({ onRoundChange, onTimerFinish }) => {
         clearInterval(countdown);
         setRound((prevRound) => prevRound + 1);
         onRoundChange(round + 1);
-        setSec(10);
+        setSec(1);
       } else if (parseInt(sec) > 0) {
         setSec((prevSec) => prevSec - 1);
       } else if (parseInt(sec) === 0) {

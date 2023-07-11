@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
-const Input = ({ lottoNumbers, onCountChange, timerFinished }) => {
+const Input = ({ lottoNumbers, timerFinished, onChooseNumbers }) => {
   const [numbers, setNumbers] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [count, setCount] = useState(0);
   const [clickSaved, setClickSaved] = useState(false);
+  const [saveNumber, setSaveNumber] = useState(null);
 
   const handleChange = (e, index) => {
     const { value } = e.target;
@@ -16,37 +17,38 @@ const Input = ({ lottoNumbers, onCountChange, timerFinished }) => {
 
   const handleSave = () => {
     const choose = numbers.slice(0, 6);
+
+    onChooseNumbers(saveNumber);
     const uniqueNumbers = [...new Set(choose)]; // 중복 제거
 
     if (uniqueNumbers.length !== choose.length) {
       setErrorMessage("중복된 숫자를 뽑을 수 없습니다.");
     } else if (choose.some((number) => number > 45)) {
       setErrorMessage("45보다 큰 숫자를 뽑을 수 없습니다.");
+    } else if (choose.length < 6) {
+      setErrorMessage("빈 칸을 채워주세요.");
     } else {
       setErrorMessage("");
-      console.log(choose);
       setClickSaved(true);
     }
   };
 
   useEffect(() => {
     let counting = 0;
-    if (clickSaved) {
-      for (let i = 0; i < numbers.length; i++) {
-        if (lottoNumbers.includes(numbers[i])) {
-          counting++;
+    if (!timerFinished) {
+      setSaveNumber(numbers);
+    } else {
+      if (timerFinished && clickSaved) {
+        for (let i = 0; i < numbers.length; i++) {
+          if (lottoNumbers.includes(numbers[i])) {
+            counting++;
+          }
         }
+        setCount(counting);
+        setClickSaved(false);
       }
-      setCount(counting);
-      setClickSaved(false);
-      onCountChange(counting);
-    } else if (!clickSaved && timerFinished) {
-      counting = -1;
-      setCount(counting);
-      setClickSaved(false);
-      onCountChange(counting);
     }
-  }, [numbers, lottoNumbers, clickSaved, onCountChange, timerFinished]);
+  }, [numbers, lottoNumbers, clickSaved, timerFinished]);
 
   useEffect(() => {
     setNumbers([]);
@@ -70,7 +72,7 @@ const Input = ({ lottoNumbers, onCountChange, timerFinished }) => {
         </SaveBtn>
       </InDiv>
       {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-      <p>맞춘 개수: {count}</p>
+      <CountP>맞춘 개수: {count}</CountP>
     </ConDiv>
   );
 };
@@ -137,4 +139,8 @@ const SaveBtn = styled.button`
   width: 5rem;
   margin: 0 !important;
   padding: 0 !important;
+`;
+
+const CountP = styled.p`
+  margin-top: 1rem;
 `;
