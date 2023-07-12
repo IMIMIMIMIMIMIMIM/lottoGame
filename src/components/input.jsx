@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
-const Input = ({ lottoNumbers, timerFinished, onChooseNumbers }) => {
+const Input = () => {
   const [numbers, setNumbers] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
-  const [count, setCount] = useState(0);
-  const [clickSaved, setClickSaved] = useState(false);
-  const [saveNumber, setSaveNumber] = useState(null);
+  const [modal, setModal] = useState(false);
 
   const handleChange = (e, index) => {
     const { value } = e.target;
@@ -15,46 +13,42 @@ const Input = ({ lottoNumbers, timerFinished, onChooseNumbers }) => {
     setNumbers(updatedNumbers);
   };
 
+  const closeModal = () => {
+    setModal(false);
+  };
+
   const handleSave = () => {
     const choose = numbers.slice(0, 6);
-
-    onChooseNumbers(saveNumber);
     const uniqueNumbers = [...new Set(choose)]; // 중복 제거
 
     if (uniqueNumbers.length !== choose.length) {
       setErrorMessage("중복된 숫자를 뽑을 수 없습니다.");
+      setModal(false);
     } else if (choose.some((number) => number > 45)) {
       setErrorMessage("45보다 큰 숫자를 뽑을 수 없습니다.");
+      setModal(false);
     } else if (choose.length < 6) {
       setErrorMessage("빈 칸을 채워주세요.");
+      setModal(false);
     } else {
       setErrorMessage("");
-      setClickSaved(true);
+      setModal(true); // 조건을 모두 만족할 경우 모달을 표시
     }
   };
 
-  useEffect(() => {
-    let counting = 0;
-    if (!timerFinished) {
-      setSaveNumber(numbers);
+  const getBackgroundColor = (number) => {
+    if (number <= 10) {
+      return "#fbc400";
+    } else if (number <= 20) {
+      return "#69c8f2";
+    } else if (number <= 30) {
+      return "#ff7272";
+    } else if (number <= 40) {
+      return "#aaa";
     } else {
-      if (timerFinished && clickSaved) {
-        for (let i = 0; i < numbers.length; i++) {
-          if (lottoNumbers.includes(numbers[i])) {
-            counting++;
-          }
-        }
-        setCount(counting);
-        setClickSaved(false);
-      }
+      return "#b0d840";
     }
-  }, [numbers, lottoNumbers, clickSaved, timerFinished]);
-
-  useEffect(() => {
-    setNumbers([]);
-    setErrorMessage("");
-    setCount(0);
-  }, [lottoNumbers]);
+  };
 
   return (
     <ConDiv>
@@ -67,12 +61,19 @@ const Input = ({ lottoNumbers, timerFinished, onChooseNumbers }) => {
             onChange={(e) => handleChange(e, index)}
           />
         ))}
-        <SaveBtn disabled={clickSaved} onClick={handleSave}>
-          저장
-        </SaveBtn>
+        <SaveBtn onClick={handleSave}>확인</SaveBtn>
+        {modal ? (
+          <ModalContainer onClick={closeModal}>
+            <Modal onClick={(e) => e.stopPropagation()}>
+              <div>
+                <NumP bgColor={getBackgroundColor(numbers)}>{numbers}</NumP>
+              </div>
+              <ModalBtn onClick={closeModal}>확인</ModalBtn>
+            </Modal>
+          </ModalContainer>
+        ) : null}
       </InDiv>
       {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-      <CountP>맞춘 개수: {count}</CountP>
     </ConDiv>
   );
 };
@@ -141,6 +142,41 @@ const SaveBtn = styled.button`
   padding: 0 !important;
 `;
 
-const CountP = styled.p`
-  margin-top: 1rem;
+const ModalContainer = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Modal = styled.div`
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  height: 80%;
+  padding: 16px;
+  background: white;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 0 5px 1px;
+`;
+
+const NumP = styled.p`
+  font-size: 1.5rem;
+  background-color: ${(props) => props.bgColor};
+`;
+
+const ModalBtn = styled.button`
+  position: fixed;
+  right: 2rem;
+  bottom: 2rem;
+  font-size: 1.5rem;
+  margin: 0 !important;
 `;
